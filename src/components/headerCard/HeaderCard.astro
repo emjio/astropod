@@ -32,15 +32,15 @@ let cover_url = cover ? cover : astropodConfig.cover;
       }
     </div>
     <img
-      alt={astropodConfig.name + "cover"}
+      alt={astropodConfig.cover}
       class="-mt-28 mx-6 md:-mt-28 border-4 z-10 relative border-base-100 rounded-lg md:mx-11 w-24 h-24 md:h-40 md:w-40"
       src={cover_url}
     />
   </div>
 
   <div class="flex md:-mt-12 px-4 md:pl-52">
-    <a href="/" class="btn btn-ghost m-1 justify-self-start px-2 sm:px-4"> Home</a>
-    <a href="/about" class="btn btn-ghost m-1 justify-self-end px-2 sm:px-4"> About</a>
+    <a href="/" class:list={[ "btn btn-ghost m-1 justify-self-start px-2 sm:px-4",{active:Astro.url.pathname === '/'}]}>收听节目</a>
+    <a href="/about" class:list={["btn btn-ghost  m-1 justify-self-end  px-2  sm:px-4",{active:Astro.url.pathname === '/about'}]}> 节目详情</a>
 
     <div class="grow"></div>
 
