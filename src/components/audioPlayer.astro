@@ -65,6 +65,7 @@ import AudioMutedIcon from "./icons/audioMutedIcon.astro";
 </div>
 
 <script>
+  // document.addEventListener('astro:page-load', () => {
   const playIconContainer = document.getElementById("play-icon");
   const muteIconContainer = document.getElementById("mute-icon");
   const audioControl = document.getElementById("audio-control");
@@ -112,8 +113,10 @@ import AudioMutedIcon from "./icons/audioMutedIcon.astro";
   playIconContainer.onchange = function () {
     if (playIconContainer.checked) {
       audio.play();
+      setCurrentUrl(audio.src)
     } else {
       audio.pause();
+      setCurrentUrl('')
     }
   };
 
@@ -126,6 +129,9 @@ import AudioMutedIcon from "./icons/audioMutedIcon.astro";
   });
 
   audio.addEventListener("timeupdate", () => {
+    if(audio.currentTime!==0){
+      storeCurrentTime(audio?.src,audio.currentTime);
+    }
     seekSlider.value = Math.floor(audio.currentTime);
     currentTimeContainer.textContent = calculateTime(seekSlider.value);
   });
@@ -145,6 +151,8 @@ import AudioMutedIcon from "./icons/audioMutedIcon.astro";
         currentTimeContainer.textContent = "0:00";
         audio.src = btn.dataset.audioUrl;
         audioDownloadLink.href = btn.dataset.audioUrl;
+        setCurrentUrl(btn.dataset.audioUrl)
+        setCurrentTime(getStoredTime(btn.dataset.audioUrl))
         disableOthersPlayButtons(btn.id, playButtons);
         playIconContainer.checked = true;
         audio.play();
@@ -153,7 +161,29 @@ import AudioMutedIcon from "./icons/audioMutedIcon.astro";
       }
     });
   });
-
+  if(getCurrnetUrl() === audio?.src || audio?.src === location.href){
+    audio.play();
+  }
+  if(getStoredTime(audio?.src)){
+    setCurrentTime(getStoredTime(audio?.src))
+  }
+  
+  function setCurrentTime(time) {
+    audio.currentTime = time;
+    currentTimeContainer.textContent = time;
+  }
+  function storeCurrentTime(id,time){
+    localStorage.setItem(id,time)
+  }
+  function getStoredTime(id) {
+    return localStorage.getItem(id)
+  }
+  function setCurrentUrl(url) {
+    localStorage.setItem('url',url)
+  }
+  function getCurrnetUrl(){
+    return localStorage.getItem('url')
+  }
   function disableOthersPlayButtons(id, playButtons) {
     playButtons.forEach(function (btn) {
       if (btn.id != id) {
@@ -161,4 +191,5 @@ import AudioMutedIcon from "./icons/audioMutedIcon.astro";
       }
     });
   }
+// },{ once: true })
 </script>
